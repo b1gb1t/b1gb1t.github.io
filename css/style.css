@@ -7,7 +7,7 @@ body {
 }
 
 a {
-    color: #aaaaaa;
+    color: #0055ff;
     text-decoration: none;
 }
 
@@ -20,10 +20,16 @@ a:hover {
     margin: 20px auto;
 }
 
+#banner {
+    width: 70%;
+    margin: auto;
+}
+
 .blog-post {
     margin: 25px auto;
     font-size: 1em;
     text-align: justify;
+    line-height: 1.5;
 }
 
 .post-title {
