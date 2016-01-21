@@ -52,7 +52,7 @@ En especial, <strong>smartcat 1</strong> era de las pruebas con menor puntuació
 <p><img src="/images/smartcat1.png" alt="Smartcat 1" /></p>
 
 <p>Como se ve en la imágen, el input de la página enviaba su contenido al comando ping, así que era evidente que había que hacer un RCE.
-Lo malo es que el servidor detectaba ciertos carścteres necesarios para hacer la ejecución de comandos a partir del ping. Exactamente detectaba los siguientes caracteres: $;&amp;|({`\t y los espacios.</p>
+Lo malo es que el servidor detectaba ciertos carácteres necesarios para hacer la ejecución de comandos a partir del ping. Exactamente detectaba los siguientes caracteres: $;&amp;|({`\t y los espacios.</p>
 
 <p>Después de varios intentos se consiguio la ejecución de comandos añadiendo el valor de new line en hexadecimal, <strong>%0A</strong> , quedando así la petición:
 <!--?prettify lang=bsh linenums=false?-->
@@ -71,11 +71,7 @@ cat&lt;index.cgi
 
 <p>Problema!!! Con &lsquo;ls&rsquo; no funciona la redirección, asi que seguimos sin saber que hay en el directorio &lsquo;there&rsquo;.</p>
 
-<p><strong>SOLUCION:</strong> Utilizar otros comandos, por ejemplo, se puede utilizar el comando <strong>find</strong> o el comando <strong>du</strong>. En el caso del find mostrará el siguiente output:
-<!--?pretify lang=bsh lnenums=false?-->
-<pre class="prettyprint">
-find&lt;.
-</pre></p>
+<p><strong>SOLUCIÓN:</strong> Utilizar otros comandos, por ejemplo, se puede utilizar el comando <strong>find</strong> o el comando <strong>du</strong>. En el caso del find mostrará el siguiente output:</p>
 
 <!--?pretify lang=bsh lnenums=false?-->
 
